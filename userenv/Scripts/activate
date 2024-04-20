@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\User\Desktop\Submission\userenv"
+VIRTUAL_ENV="C:\Users\User\Desktop\Python Project\Take Home Assessment\userenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
