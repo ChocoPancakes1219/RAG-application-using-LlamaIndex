@@ -33,7 +33,7 @@ Alternatively, if you prefer to use a virtual environment, a setup is included i
 ### Using the Main Interface
 
 Access the web interface by navigating to the localhost server main endpoint, which is shown after succesfully starting up uvicorn through the command, an example is shown as image below:
-![Terminal Screenshot](https://prnt.sc/6eCOwF6XWrHh "This is a screenshot of uvicorn output")
+![Terminal Screenshot](https://prnt.sc/6eCOwF6XWrHh)
 From here, you can access the functionalities for file upload and querying:
 
 #### File Upload
@@ -42,18 +42,18 @@ From here, you can access the functionalities for file upload and querying:
 - Click 'Upload Files' to submit the files.
 - Files will be uploaded, ingested, and saved in both a 'data' folder and indexed in llama index through the **POST `/ingest`** endpoint
 - The result of the upload will be displayed once the process is completed.
-![Upload response Screenshot](https://prnt.sc/hZpB2JPHB6bE "This is a screenshot of output after file are sent to the ingest endpoint")
+![Upload response Screenshot](https://prnt.sc/hZpB2JPHB6bE)
 
 #### Query from File
 ## Through main interface
 - Type your query into the message textbox and click the 'Send' button.
 - The query will be sent to **GET `/query`** endpoint and generate a response
 - The input and response text will be displayed in the message box.
-![Query response Screenshot](https://prnt.sc/hZpB2JPHB6bE "This is a screenshot of output in the message box after response is retrieved from the endpoint")
+![Query response Screenshot](https://prnt.sc/hZpB2JPHB6bE)
 
 ## Through endpint directly
 - While the server is running in the background, navigate to your browser and type the following in the address bar: **{Server URL and port}/query?query="{Insert Your Query here}"**
 
-An example would be **http://127.0.0.1:8000/query?query="How many eggs for a fried rice"**
+An example would be **ht<span>tp<span>://127.0.0.1:8000/query?query="How many eggs for a fried rice"**
 
 A response will be given in JSON format: {"query":{Your Query text},"results":{Response Generated}}
