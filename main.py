@@ -10,7 +10,7 @@ import os
 
 #Get api from external file to avoid accidentally pushing api key
 #Comment out this part of the code if you wish to input your API key directly in python, else replace the path to your api key env
-config_path = "C:\\Users\\User\\Documents\\openai_key.env"
+config_path = "./openai_key.env"
 load_dotenv(dotenv_path=config_path)
 api_key = os.getenv('OPENAI_API_KEY')
 os.environ["OPENAI_API_KEY"]= api_key

@@ -26,7 +26,7 @@ The APIs are designed to handle errors effectively to ensure smooth communicatio
 
 
 # Requirements
-
+## Setting up the Environemnt
 To run this project, you need to install its dependencies. You can do so by using the following pip command in your terminal:
 
 ```bash
@@ -35,12 +35,14 @@ pip install -r requirements.txt
 
 Alternatively, if you prefer to use a virtual environment, a setup is included in the `userenv` folder. You can activate this environment to manage dependencies separately from your global Python installation.
 
+### Setting the API Key
+1. Open up openai_key.env using any text editing tools (e.g. notepad)
+2. Replace the 'YOUR_API_KEY' with your own OpenAI API key
+
 ## Running the Application
-
 ### Setting up the Server
-
 1. Open a command prompt.
-2. Change directory to where your `.py` file is located using:
+2. Change directory to where `main.py` file is located using:
    ```bash
    cd path_to_your_directory
    ```
