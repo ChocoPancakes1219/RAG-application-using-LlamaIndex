@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"index_store/data": {"414c719c-b304-420e-a708-f2351efa6429": {"__type__": "vector_store", "__data__": "{\"index_id\": \"414c719c-b304-420e-a708-f2351efa6429\", \"summary\": null, \"nodes_dict\": {\"45e90d7d-ce32-458d-9b60-e6a6c2ef9522\": \"45e90d7d-ce32-458d-9b60-e6a6c2ef9522\", \"6fd84b58-b664-4610-a36e-0b7ebe6482c1\": \"6fd84b58-b664-4610-a36e-0b7ebe6482c1\", \"ab0637ed-1719-425f-994a-6abbf69ce964\": \"ab0637ed-1719-425f-994a-6abbf69ce964\"}, \"doc_id_dict\": {}, \"embeddings_dict\": {}}"}}}
+=======
+{"index_store/data": {"8c0b2b24-3e4c-478b-8bed-29fef42e1c53": {"__type__": "vector_store", "__data__": "{\"index_id\": \"8c0b2b24-3e4c-478b-8bed-29fef42e1c53\", \"summary\": null, \"nodes_dict\": {\"6fd12269-c2c8-4b6a-a6b2-ade42f1aee17\": \"6fd12269-c2c8-4b6a-a6b2-ade42f1aee17\", \"434e6e40-cf24-4f07-89a5-555d2c0593bc\": \"434e6e40-cf24-4f07-89a5-555d2c0593bc\", \"09df756d-b1aa-44fd-aa5e-f64f0e3be896\": \"09df756d-b1aa-44fd-aa5e-f64f0e3be896\", \"2b094965-9ed1-4e7f-8677-8bae806a028f\": \"2b094965-9ed1-4e7f-8677-8bae806a028f\"}, \"doc_id_dict\": {}, \"embeddings_dict\": {}}"}}}
+>>>>>>> HaoWei

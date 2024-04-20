@@ -58,7 +58,14 @@ async def ingest(
         List[UploadFile], File(description="Multiple files as UploadFile")
     ],
 ):
+    #Check if file uploaded is empty
+    if len(files) ==1 and files[0].filename == '':
+      return JSONResponse(status_code=400, content={"message": "No files detected. Please upload at least one file."})  
+
+    #filter out non txt files 
     removed_documents,files=filter_file_format(files)
+
+
     new_documents = []
     #Loop through files uploaded
     for file in files:
@@ -74,10 +81,7 @@ async def ingest(
             new_documents.append(out_file_path)
 
         except Exception as e:
-            if file.filename== '':
-              return JSONResponse(status_code=400, content={"message": "No files detected. Please upload at least one file."})
-            else:
-              return JSONResponse(status_code=500, content={"message": f"Failed to process file {file.filename}: {str(e)}"})
+            return JSONResponse(status_code=500, content={"message": f"Failed to process file {file.filename}: {str(e)}"})
 
 
 
