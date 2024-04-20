@@ -106,50 +106,24 @@ async def search_query(query: str ):
         return JSONResponse(status_code=400, content={"message": "No query text detected. Please ensure query is not empty."}) 
     try: 
       response =  query_engine.query(query)
-      results = Markdown(f"<b>{response}</b>")
+      results = Markdown(f"{response}")
       return {"query": query, "results": results.data}
     except Exception as e:
       return JSONResponse(status_code=500, content={"message": f"Failed to process query: {str(e)}"})
 
+
+#Retrieve html code for the main interface
+def load_content():
+    try:
+        with open('chat_interface.html', 'r') as file:
+            content = file.read()
+        return content
+    except IOError as e:
+        print(f"Error reading file: {e}")
+        return None
+
 #Main interface for web application
 @app.get("/")
 async def main():
-    content = """
-<body>
-<div id="chat-interface">
-  <form id="upload-form" enctype="multipart/form-data" method="post">
-    <input name="files" type="file" multiple>
-    <button type="submit">Upload Files</button>
-  </form>
-  <div id="upload-response"></div>
-  <br>
-  <form id="search-form" method="get">
-    <input name="query" type="text" placeholder="Enter your search query here...">
-    <button type="submit">Search</button>
-  </form>
-  <div id="results-container"></div>
-</div>
-<script>
-document.getElementById('upload-form').onsubmit = async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const response = await fetch('/ingest', {
-    method: 'POST',
-    body: formData,
-  });
-  const data = await response.json();
-  document.getElementById('upload-response').innerHTML = `<div>${data.message}</div>`;
-};
-
-document.getElementById('search-form').onsubmit = async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const query = formData.get('query');
-  const response = await fetch(`/query?query=${encodeURIComponent(query)}`);
-  const data = await response.json();
-  document.getElementById('results-container').innerHTML = `<div>${data.results}</div>`;
-};
-</script>
-</body>
-    """
+    content = load_content()
     return HTMLResponse(content=content)
