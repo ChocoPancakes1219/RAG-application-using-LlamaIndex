@@ -44,14 +44,14 @@ From here, you can access the functionalities for file upload and querying:
 - The result of the upload will be displayed once the process is completed.
 ![Upload response Screenshot](./Images/UploadFile.png)
 
-#### Query from File
-## Through main interface
+### Query from File
+#### Through main interface
 - Type your query into the message textbox and click the 'Send' button.
 - The query will be sent to **GET `/query`** endpoint and generate a response
 - The input and response text will be displayed in the message box.
 ![Query response Screenshot](./Images/ResponseChat.png)
 
-## Through endpint directly
+#### Through endpint directly
 - While the server is running in the background, navigate to your browser and type the following in the address bar: **{Server URL and port}/query?query="{Insert Your Query here}"**
 
 An example would be **ht<span>tp<span>://127.0.0.1:8000/query?query="How many eggs for a fried rice"**
