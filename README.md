@@ -33,7 +33,7 @@ Alternatively, if you prefer to use a virtual environment, a setup is included i
 ### Using the Main Interface
 
 Access the web interface by navigating to the localhost server main endpoint, which is shown after succesfully starting up uvicorn through the command, an example is shown as image below:
-![Terminal Screenshot](Images/Uvicorn,png)
+![Terminal Screenshot](./Images/Uvicorn,png)
 From here, you can access the functionalities for file upload and querying:
 
 #### File Upload
