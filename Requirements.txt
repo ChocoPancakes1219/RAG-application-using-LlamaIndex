@@ -1,0 +1,6 @@
+Uvicorn==0.29.0
+llama-index==0.10.30
+typing==3.7.4.3
+ipython==8.23.0
+fastapi==0.110.2
+python-dotenv==1.0.1
