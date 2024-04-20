@@ -35,7 +35,12 @@ else:
     index = load_index_from_storage(storage_context)
 
 #initialize query engine
-query_engine= index.as_query_engine(streaming=True)
+query_engine = index.as_query_engine()
+
+#define function to update query engine
+def update_query_engine(index):
+    global query_engine
+    query_engine = index.as_query_engine()
 
 # Function to filter out all non txt files
 def filter_file_format(files: List[UploadFile]) -> List[UploadFile]:
@@ -67,9 +72,7 @@ async def ingest(
                         break
                     out_file.write(chunk)
             new_documents.append(out_file_path)
-            # Insert the document into the index
 
-            new_documents.append(out_file_path)
         except Exception as e:
             if file.filename== '':
               return JSONResponse(status_code=400, content={"message": "No files detected. Please upload at least one file."})
@@ -83,16 +86,17 @@ async def ingest(
         documents = SimpleDirectoryReader("data").load_data()
         index = VectorStoreIndex.from_documents(documents)
         index.storage_context.persist()
-        query_engine= index.as_query_engine(streaming=True)
+        update_query_engine(index)
+        
     
             
     filenames = [file.filename for file in files]
     return {"message": f"Removed from uploads (Non-txt format):<br>- {'<br>- '.join([os.path.basename(doc) for doc in removed_documents])}<br><br>Successfully uploaded and saved:<br>- {'<br>- '.join([os.path.basename(doc) for doc in new_documents])}<br><br>"}
 
 @app.get("/query")
-def search_query(query: str ):
+async def search_query(query: str ):
     #Retrieve response from the query engine
-    response = query_engine.query(query)
+    response =  query_engine.query(query)
     results = Markdown(f"<b>{response}</b>")
     return {"query": query, "results": results.data}
 
