@@ -16,6 +16,7 @@ api_key = os.getenv('OPENAI_API_KEY')
 os.environ["OPENAI_API_KEY"]= api_key
 
 
+
 #Ensure the data directory exists
 os.makedirs('data', exist_ok=True)
 
@@ -34,7 +35,7 @@ else:
     index = load_index_from_storage(storage_context)
 
 #initialize query engine
-query_engine = index.as_query_engine()
+query_engine = index.as_query_engine(response_mode="tree_summarize")
 
 #define function to update query engine from api calls to ensure real-time update
 def update_query_engine(index):

@@ -1,0 +1,6 @@
+ANO;#TIMES;#PARTIDAS [TOTAL=(#TIMES-1)*2]
+2003;24;46
+2004;24;46
+2005;22;42
+2006;20;38
+#from 2006 onwards, always 20 teams per year
