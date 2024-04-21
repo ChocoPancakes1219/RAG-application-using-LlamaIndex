@@ -3,6 +3,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader,StorageContext, load_index_from_storage
 from IPython.display import Markdown
+from llama_index.core import Settings
 from dotenv import load_dotenv
 import os
 
@@ -16,6 +17,10 @@ load_dotenv(dotenv_path=config_path)
 api_key = os.getenv('OPENAI_API_KEY')
 os.environ["OPENAI_API_KEY"]= api_key
 
+# Setting chunk size for llamaindex, 512 and 50 are the default parameters, which are proved to be effective based on the documentation
+# https://www.llamaindex.ai/blog/evaluating-the-ideal-chunk-size-for-a-rag-system-using-llamaindex-6207e5d3fec5
+Settings.chunk_size = 512
+Settings.chunk_overlap = 50
 
 # Set up variables for directory path and file metadata
 directory_path = "./data"
