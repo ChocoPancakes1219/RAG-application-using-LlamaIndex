@@ -17,7 +17,6 @@ api_key = os.getenv('OPENAI_API_KEY')
 os.environ["OPENAI_API_KEY"]= api_key
 
 
-
 # Set up variables for directory path and file metadata
 directory_path = "./data"
 file_metadata = lambda x : {"filename": x}
