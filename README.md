@@ -99,4 +99,4 @@ Try the project yourself by following the instructions below:
 > 2. Now go to '/sample' folder in the directory, upload the "ranking-2003.txt" and "Trash data.BMP" through the web interface. The BMP file should be removed from the upload as it's not the correct format *(Automatically filter out non-text file formats)*
 > 3. Once the file are successfully uploaded, ask the same question again, it should give the correct answer based on the data uploaded *(Real-time update Query Engine)*
 > 4. Go back to the directory, you will find that no files are being added to the folder *(Remove temp files after no longer needed)*
-> 5. Try again, now with your own data, you may also test out things like: Large file upload, empty upload (By clicking the upload button without any files selected), Empty query texts etc
+> 5. Try again, now with your own data, you may also test out things like: Large file upload, empty upload (By clicking the upload button without any files selected), Empty query texts (Only visible to user when using the endpoint directly) etc
