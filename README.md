@@ -6,14 +6,23 @@ This application is built using FastAPI, a modern, fast (high-performance) web f
 
 ### Endpoints
 #### 1. POST `/ingest`:
-- **Functionality**: This endpoint allows users to upload text documents via a web interface or directly through the API. The uploaded documents are then ingested into LlamaIndex, creating a searchable index that enhances the model's response capabilities.
-- **Key Features**: Able to filter out non-text file formats. Processing large files in manageable chunks to optimize memory usage and performance. Efficiently indexes large volumes of text to facilitate rapid retrieval. Able to manage error when API is called without file uploads.
+**Functionality**: This endpoint allows users to upload text documents via a web interface or directly through the API. The uploaded documents are then ingested into LlamaIndex, creating a searchable index that enhances the model's response capabilities.
+**Key Features**: 
+- Able to filter out non-text file formats. 
+- Processing large files in manageable chunks to optimize memory usage and performance. 
+- Efficiently indexes large volumes of text to facilitate rapid retrieval and effective memory management.
+note: Index are currently stored locally in the project respiratory, for future scaling purpose switching to a vector database (e.g. Pinecone) would be more ideal
+- Able to manage various type of errors and return clear and concise error messages
 #### 2. GET `/query`:
-- **Functionality**: Users can submit search queries through this endpoint. The application uses LlamaIndex's AI-driven search capabilities to fetch relevant information from the indexed documents.
-- **Key Features**: Provides quick and relevant responses based on the context of the indexed documents. Supports complex query types, offering flexibility in information retrieval.Able to detect and handle case where empty query is parsed to the API.
+**Functionality**: Users can submit search queries through this endpoint. The application uses LlamaIndex's AI-driven search capabilities to fetch relevant information from the indexed documents.
+**Key Features**: 
+- Provides quick and relevant responses based on the context of the indexed documents. 
+- Supports complex query types, offering flexibility in information retrieval.
+- Able to detect and handle case where empty query is parsed to the API.
 #### 3. GET `/`:
-- **Functionality**: Serves as the main entry point for the web application. This endpoint delivers the user interface, enabling easy access to both the ingestion and querying functionalities.
-- **Key Features**: User-friendly interface that guides users through document upload and querying processes. 
+**Functionality**: Serves as the main entry point for the web application. This endpoint delivers the user interface, enabling easy access to both the ingestion and querying functionalities.
+**Key Features**: 
+- User-friendly interface that guides users through document upload and querying processes. 
 
 ### Real-Time Updates
 The application supports real-time updating of the index whenever new documents are ingested via the **POST `/ingest`** endpoint. This ensures that the knowledge base is continually evolving and that queries return the most up-to-date information.
@@ -65,7 +74,7 @@ From here, you can access the functionalities for file upload and querying:
 
 - Use the 'Choose File' button in the main interface to select one or multiple files you wish to upload.
 - Click 'Upload Files' to submit the files.
-- Files will be uploaded, ingested, and saved in both a 'data' folder and indexed in llama index through the **POST `/ingest`** endpoint
+- Files will be uploaded, ingested, and saved as index through the **POST `/ingest`** endpoint
 - The result of the upload will be displayed once the process is completed.
 ![Upload response Screenshot](./Images/UploadFile.png)
 

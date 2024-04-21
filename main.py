@@ -6,6 +6,7 @@ from IPython.display import Markdown
 from dotenv import load_dotenv
 import os
 
+# Use the following line of code if you wish to directly input the API Key from python
 #os.environ["OPENAI_API_KEY"]= "your API Key"
 
 #Get api from external file to avoid accidentally pushing api key
@@ -17,6 +18,10 @@ os.environ["OPENAI_API_KEY"]= api_key
 
 
 
+# Set up variables for directory path and file metadata
+directory_path = "./data"
+file_metadata = lambda x : {"filename": x}
+
 #Ensure the data directory exists
 os.makedirs('data', exist_ok=True)
 
@@ -24,14 +29,15 @@ os.makedirs('data', exist_ok=True)
 PERSIST_DIR = "./storage"
 if not os.path.exists(PERSIST_DIR):
     # load the documents from data folder and create the index
-    documents = SimpleDirectoryReader("data").load_data()
+    reader = SimpleDirectoryReader(directory_path, file_metadata=file_metadata)
+    documents=reader.load_data()
     index = VectorStoreIndex.from_documents(documents)
 
     # store vectors and index in storage for future use
     index.storage_context.persist()
 else:
     # load the existing index
-    storage_context = StorageContext.from_defaults(persist_dir="./storage")
+    storage_context = StorageContext.from_defaults(persist_dir=PERSIST_DIR)
     index = load_index_from_storage(storage_context)
 
 #initialize query engine
@@ -45,7 +51,7 @@ def update_query_engine(index):
 
 app = FastAPI()
 
-# Function to filter out all non txt files
+# Function to filter out all non txt files, and record their filename in a list
 def filter_file_format(files: List[UploadFile]) -> List[UploadFile]:
     filtered_files = [file for file in files if file.filename.endswith('.txt')]
 
@@ -68,7 +74,7 @@ async def ingest(
     if len(files) ==1 and files[0].filename == '':
       return JSONResponse(status_code=400, content={"message": "No files detected. Please upload at least one file."})  
 
-    #filter out non txt files 
+    #filter out non txt files
     removed_documents,files=filter_file_format(files)
 
     # Variable to save filenames for output
@@ -76,12 +82,13 @@ async def ingest(
 
     # Add files into data folder, and update query engine if there's any txt file uploaded
     if files:
+
       for file in files:
           out_file_path = os.path.join('data', file.filename)
           try:
               with open(out_file_path, 'wb') as out_file:
                   while True:
-                    #Read in chunks of 1MB
+                    #Read in chunks of 1MB, in case of large txt files being uploaded
                       chunk = await file.read(1024*1024)
                       if not chunk:
                           break
@@ -90,13 +97,31 @@ async def ingest(
           except Exception as e:
               return JSONResponse(status_code=500, content={"message": f"Failed to process file {file.filename}: {str(e)}"})
 
-      # Update the index with new documents, reload query engine
-      documents = SimpleDirectoryReader("data").load_data()
-      index = VectorStoreIndex.from_documents(documents)
-      index.storage_context.persist()
-      update_query_engine(index)
+      # Update the index with new documents
+      try:
+        reader = SimpleDirectoryReader(directory_path, file_metadata=file_metadata)
+        documents=reader.load_data()
+        for d in documents:
+          index.insert(document = d)
+      except Exception as e:
+            return JSONResponse(status_code=500, content={"message": f"Failed to store file in index: {str(e)}"})
+
+      # Save the index storage and reload query engine
+      try:
+        index.storage_context.persist()
+        update_query_engine(index)
+      except Exception as e:
+            return JSONResponse(status_code=500, content={"message": f"Failed to update index and query engine: {str(e)}"})
+
+
+      # cleanup temp file after insert into index
+      try:
+        for temp_file_path in new_documents:
+            os.unlink(temp_file_path)
+      except Exception as e:
+            return JSONResponse(status_code=500, content={"message": f"Failed to cleam up temp files: {str(e)}"})
               
-    filenames = [file.filename for file in files]
+
     return {"message": f"Removed from uploads (Non-txt format):<br>- {'<br>- '.join([os.path.basename(doc) for doc in removed_documents])}<br><br>Successfully uploaded and saved:<br>- {'<br>- '.join([os.path.basename(doc) for doc in new_documents])}<br><br>"}
 
 #Query API Definition
@@ -106,6 +131,7 @@ async def search_query(query: str ):
     if query =='':
         return JSONResponse(status_code=400, content={"message": "No query text detected. Please ensure query is not empty."}) 
     try: 
+      # Generate query using the query engine, markdown the response and return the results
       response =  query_engine.query(query)
       results = Markdown(f"{response}")
       return {"query": query, "results": results.data}
@@ -113,7 +139,7 @@ async def search_query(query: str ):
       return JSONResponse(status_code=500, content={"message": f"Failed to process query: {str(e)}"})
 
 
-#Retrieve html code for the main interface
+#Retrieve html code for the main interface from chat_interface.html
 def load_content():
     try:
         with open('chat_interface.html', 'r') as file:
