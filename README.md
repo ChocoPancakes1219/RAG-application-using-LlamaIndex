@@ -1,6 +1,6 @@
 # RAG Application using LlamaIndex + Ollama
 
-A local RAG (Retrieval-Augmented Generation) web application using LlamaIndex with **Ollama** for completely local, privacy-friendly operation. No API keys required!
+A local RAG (Retrieval-Augmented Generation) application using LlamaIndex with **Ollama** for completely local, privacy-friendly operation. No API keys required!
 
 ## Features
 
@@ -9,13 +9,14 @@ A local RAG (Retrieval-Augmented Generation) web application using LlamaIndex wi
 - 📄 **Document Ingestion** - Upload .txt files to build your knowledge base
 - 🔍 **Semantic Search** - Query your documents with natural language
 - 🌐 **Web Interface** - Simple chat UI for easy interaction
+- 🚀 **systemd Service** - Easy start/stop/restart commands
 
 ## Prerequisites
 
 1. **Ollama** installed and running
    ```bash
    # Install Ollama: https://ollama.ai
-   ollama serve
+   # Should be running on 127.0.0.1:11434
    ```
 
 2. **Required models**
@@ -28,42 +29,88 @@ A local RAG (Retrieval-Augmented Generation) web application using LlamaIndex wi
 
 ## Quick Start
 
+### 1. Setup
+
 ```bash
 # Clone the repo
 git clone https://github.com/YOUR_USERNAME/RAG-application-using-LlamaIndex.git
 cd RAG-application-using-LlamaIndex
 
 # Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# or: venv\Scripts\activate  # Windows
+python -m venv userenv
+source userenv/bin/activate  # Linux/Mac
+# or: userenv\Scripts\activate  # Windows
 
 # Install dependencies
 pip install -r Requirements.txt
-
-# Run the server
-uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-Open http://localhost:8000 in your browser.
+### 2. Run (Simple)
 
-## API Endpoints
+```bash
+# Start server manually
+source userenv/bin/activate
+uvicorn main:app --host 127.0.0.1 --port 58777
+```
 
-### POST `/ingest`
+Open http://127.0.0.1:58777 in your browser.
+
+### 3. Install as System Service (Recommended)
+
+For automatic startup and easy management:
+
+```bash
+# Install CLI tool
+sudo cp rag-server-cli.sh /usr/local/bin/rag-server
+
+# Install systemd service
+sudo cp rag-server.service /etc/systemd/system/
+sudo systemctl daemon-reload
+
+# Enable auto-start on boot
+rag-server enable
+
+# Start the service
+rag-server start
+
+# Check status
+rag-server status
+```
+
+**Note**: Edit `rag-server.service` to match your paths before installing.
+
+## Usage
+
+### Commands (with systemd)
+
+```bash
+rag-server start    # Start the server
+rag-server stop     # Stop the server
+rag-server restart  # Restart the server
+rag-server status   # Check status
+rag-server logs     # View logs
+rag-server enable   # Enable auto-start
+rag-server disable  # Disable auto-start
+```
+
+### API Endpoints
+
+#### POST `/ingest`
 Upload text files to build your knowledge base.
 
 ```bash
-curl -X POST http://localhost:8000/ingest -F "files=@document.txt"
+curl -X POST http://127.0.0.1:58777/ingest \
+  -F "files=@document.txt"
 ```
 
-### GET `/query`
+#### GET `/query`
 Query your knowledge base.
 
 ```bash
-curl "http://localhost:8000/query?query=What is the main topic?"
+curl "http://127.0.0.1:58777/query?query=What is the main topic?"
 ```
 
-### GET `/`
+#### GET `/`
 Web interface for chat-based interaction.
 
 ## Configuration
@@ -85,13 +132,22 @@ Settings.embed_model = OllamaEmbedding(model_name="your-embed-model")
 
 ```
 .
-├── main.py              # FastAPI application
-├── chat_interface.html  # Web UI
-├── Requirements.txt     # Python dependencies
-├── data/               # Sample data (gitignored)
-├── storage/            # Vector index (gitignored)
-└── sample/             # Example files for testing
+├── main.py                  # FastAPI application
+├── chat_interface.html      # Web UI
+├── Requirements.txt         # Python dependencies
+├── rag-server.service       # systemd service file
+├── rag-server-cli.sh        # CLI wrapper script
+├── data/                    # Uploaded documents (gitignored)
+├── storage/                 # Vector index (gitignored)
+└── userenv/                 # Virtual environment (gitignored)
 ```
+
+## Security
+
+✅ **Ollama**: Runs on `127.0.0.1:11434` (localhost only)  
+✅ **RAG Server**: Runs on `127.0.0.1:58777` (localhost only)  
+✅ **No external exposure** by default  
+✅ **All data stays local**
 
 ## How It Works
 
@@ -101,7 +157,8 @@ Settings.embed_model = OllamaEmbedding(model_name="your-embed-model")
 ## Troubleshooting
 
 **"Connection refused" error**
-- Make sure Ollama is running: `ollama serve`
+- Make sure Ollama is running: `ollama list`
+- Check Ollama is on 127.0.0.1:11434: `ss -tlnp | grep 11434`
 
 **Slow responses**
 - First query loads the model into memory (takes ~10-30s)
@@ -109,6 +166,19 @@ Settings.embed_model = OllamaEmbedding(model_name="your-embed-model")
 
 **Out of memory**
 - Try a smaller model: `ollama pull gemma2:2b`
+
+**Service won't start**
+- Check logs: `rag-server logs`
+- Verify paths in `rag-server.service` match your system
+- Ensure virtual environment exists: `userenv/bin/activate`
+
+## Development
+
+This project uses:
+- **FastAPI** for the web server
+- **LlamaIndex** for RAG implementation
+- **Ollama** for local LLM/embeddings
+- **uvicorn** as ASGI server
 
 ## Original Project
 
@@ -119,3 +189,10 @@ Forked and modified to use Ollama instead of OpenAI API.
 ## License
 
 MIT
+
+## Contributing
+
+Pull requests welcome! Please ensure:
+- All changes work with Ollama (no external API dependencies)
+- Code follows existing style
+- Update README for new features

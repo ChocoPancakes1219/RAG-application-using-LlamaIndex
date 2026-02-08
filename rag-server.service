@@ -1,0 +1,16 @@
+[Unit]
+Description=RAG Server (LlamaIndex + Ollama)
+After=network.target ollama.service
+Requires=ollama.service
+
+[Service]
+Type=simple
+User=mikemin
+WorkingDirectory=/home/mikemin/Development/Workspace/AiAgent/RAG-application-using-LlamaIndex
+Environment="PATH=/home/mikemin/Development/Workspace/AiAgent/RAG-application-using-LlamaIndex/userenv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/home/mikemin/Development/Workspace/AiAgent/RAG-application-using-LlamaIndex/userenv/bin/uvicorn main:app --host 127.0.0.1 --port 58777
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
