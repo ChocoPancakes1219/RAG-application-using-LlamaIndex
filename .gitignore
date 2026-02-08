@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+userenv/
+userenv.windows.bak/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Environment & Secrets
+.env
+*.env
+*.env.bak
+openai_key.env*
+.secret*
+*_key.env*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# RAG Storage (contains embedded data)
+storage/
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+
+# Temporary files
+tmp/
+temp/

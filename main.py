@@ -4,18 +4,36 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader,StorageContext, load_index_from_storage
 from IPython.display import Markdown
 from llama_index.core import Settings
+from llama_index.core.query_engine import RetrieverQueryEngine
+
 from dotenv import load_dotenv
 import os
+
+from llama_index.llms.ollama import Ollama
+from llama_index.embeddings.ollama import OllamaEmbedding
+from llama_index.core import Settings
+
+# --- Force Ollama (disable OpenAI default) ---
+Settings.llm = Ollama(
+    model="gemma2:9b",
+    base_url="http://localhost:11434",
+)
+
+Settings.embed_model = OllamaEmbedding(
+    model_name="nomic-embed-text:latest",
+    base_url="http://localhost:11434",
+)
+
 
 # Use the following line of code if you wish to directly input the API Key from python
 #os.environ["OPENAI_API_KEY"]= "your API Key"
 
 #Get api from external file to avoid accidentally pushing api key
 #Comment out this part of the code if you wish to input your API key directly in python, else replace the path to your api key env
-config_path = "./openai_key.env"
-load_dotenv(dotenv_path=config_path)
-api_key = os.getenv('OPENAI_API_KEY')
-os.environ["OPENAI_API_KEY"]= api_key
+#config_path = "./openai_key.env"
+#load_dotenv(dotenv_path=config_path)
+#api_key = os.getenv('OPENAI_API_KEY')
+#os.environ["OPENAI_API_KEY"]= api_key
 
 # Setting chunk size for llamaindex, 512 and 50 are the default parameters, which are proved to be effective based on the documentation
 # https://www.llamaindex.ai/blog/evaluating-the-ideal-chunk-size-for-a-rag-system-using-llamaindex-6207e5d3fec5
@@ -45,12 +63,26 @@ else:
     index = load_index_from_storage(storage_context)
 
 #initialize query engine
-query_engine = index.as_query_engine(response_mode="tree_summarize")
+#query_engine = index.as_query_engine(response_mode="tree_summarize")
 
 #define function to update query engine from api calls to ensure real-time update
+#def update_query_engine(index):
+#    global query_engine
+#    query_engine = index.as_query_engine()
+# initialize query engine
+query_engine = index.as_query_engine(
+    response_mode="compact",
+    similarity_top_k=3,
+)
+
+# define function to update query engine from api calls
 def update_query_engine(index):
     global query_engine
-    query_engine = index.as_query_engine()
+    query_engine = index.as_query_engine(
+        response_mode="compact",
+        similarity_top_k=3,
+    )
+
 
 
 app = FastAPI()
@@ -134,11 +166,14 @@ async def search_query(query: str ):
     #Retrieve response from the query engine
     if query =='':
         return JSONResponse(status_code=400, content={"message": "No query text detected. Please ensure query is not empty."}) 
-    try: 
+    try:
       # Generate query using the query engine, markdown the response and return the results
       response =  query_engine.query(query)
-      results = Markdown(f"{response}")
-      return {"query": query, "results": results.data}
+      #return {"query": query, "results": results.data}
+      return {
+        "query": query,
+        "response": str(response),
+      }
     except Exception as e:
       return JSONResponse(status_code=500, content={"message": f"Failed to process query: {str(e)}"})
 
