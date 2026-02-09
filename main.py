@@ -15,7 +15,7 @@ from llama_index.core import Settings
 
 # --- Force Ollama (disable OpenAI default) ---
 Settings.llm = Ollama(
-    model="gemma2:9b",
+    model="qwen2.5:7b",
     base_url="http://localhost:11434",
 )
 

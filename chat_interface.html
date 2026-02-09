@@ -71,10 +71,14 @@
 
         try {
             const response = await fetch(`/query?query=${encodeURIComponent(query)}`);
+            if (!response.ok) {
+                addMessage(`Server error: ${response.status}`, 'received');
+                return;
+            }
             const data = await response.json();
-            addMessage(data.results || 'No response from server', 'received');
+            addMessage(data.response || 'No response from server', 'received');
         } catch (error) {
-            addMessage('Failed to get response', 'received');
+            addMessage(`Failed to get response: ${error.message}`, 'received');
         }
     };
 
