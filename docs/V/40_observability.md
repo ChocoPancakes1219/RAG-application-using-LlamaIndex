@@ -9,9 +9,11 @@
 - Qdrant 검색 latency
 - Elasticsearch 검색 latency
 - Celery queue 적체량
+- internal LLM chat latency
 
 ## 로그 포인트
 
 - document_id, user_id, task_id
 - status transition
 - retrieval top_k, latency, source count
+- internal chat model, latency, error code

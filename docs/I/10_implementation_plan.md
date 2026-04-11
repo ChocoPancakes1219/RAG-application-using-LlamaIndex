@@ -18,5 +18,6 @@
 - [x] Celery + Redis bootstrap / eager fallback 추가
 - [x] Qdrant adapter bootstrap 추가
 - [x] Elasticsearch adapter bootstrap 추가
+- [x] backend 기본 Ollama 트래픽용 internal LLM gateway 추가
 - [ ] hybrid retrieval + citations 구현 고도화
 - [ ] 테스트/관찰성 추가

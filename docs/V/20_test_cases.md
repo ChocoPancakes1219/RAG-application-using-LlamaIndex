@@ -34,6 +34,21 @@
   - report JSON 생성
   - expected keyword / answer / filename / citation count 정답지 비교
 
+## TC-ARAG-06: internal LLM gateway
+
+- 대상: `POST /internal/llm/chat`
+- 기대:
+  - `answer`, `provider=ollama`, `model` 반환
+  - backend 기본 Ollama 경로에서 내부 host 노출 없이 호출 가능
+
+## TC-ARAG-07: query response synthesis
+
+- 대상: `POST /internal/rag/query`
+- 기대:
+  - citations가 있으면 `response`가 citation 기반 자연어 답변으로 합성된다
+  - synthesis 실패 시 snippet fallback 문자열로 안전하게 내려간다
+  - `primary_citation_document_id`, `primary_citation_filename`가 대표 근거를 식별한다
+
 ## 2026-04-06 실행 결과
 
 - `PYTHONPYCACHEPREFIX=/tmp/airag-pyc .venv/bin/python -m py_compile ...`: 통과

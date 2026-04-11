@@ -1,6 +1,8 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+import httpx
+
 from app.domain.rag.schemas import QueryRequest
 from tests.conftest import make_upload
 
@@ -110,6 +112,134 @@ def test_hybrid_query_includes_keyword_citation_pytest(rag_fixture) -> None:
 
     assert response.citations
     assert response.citations[0].filename == "note.txt"
+
+
+def test_hybrid_query_synthesizes_response_from_citations_pytest(rag_fixture, monkeypatch) -> None:
+    index_adapter = rag_fixture["index_adapter"]
+    query_service = rag_fixture["query_service"]
+    keyword_nodes = [
+        SimpleNamespace(
+            node=SimpleNamespace(
+                metadata={
+                    "document_id": "doc-2",
+                    "filename": "notes.txt",
+                    "source": "keyword",
+                },
+                text="General event notes without the lunch time.",
+            ),
+            score=0.95,
+        ),
+        SimpleNamespace(
+            node=SimpleNamespace(
+                metadata={
+                    "document_id": "doc-1",
+                    "filename": "memo.txt",
+                    "source": "keyword",
+                },
+                text="Lunch is at 12 PM.",
+            ),
+            score=0.9,
+        )
+    ]
+
+    class _MockResponse:
+        is_success = True
+
+        def json(self):
+            return {"message": {"content": "Lunch is at 12 PM."}}
+
+    class _MockClient:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def post(self, path: str, json: dict[str, object]):
+            assert path == "/api/chat"
+            return _MockResponse()
+
+    monkeypatch.setattr(httpx, "Client", lambda *args, **kwargs: _MockClient())
+
+    with patch.object(
+        index_adapter._qdrant_adapter,
+        "query_chunks",
+        side_effect=RuntimeError("dense backend unavailable"),
+    ), patch.object(
+        index_adapter._local_adapter,
+        "query_user_index",
+        side_effect=RuntimeError("dense backend unavailable"),
+    ), patch.object(
+        index_adapter._elasticsearch_adapter,
+        "query_chunks",
+        return_value=keyword_nodes,
+    ):
+        response = query_service.query(
+            QueryRequest(
+                user_id="user-1",
+                query="When is lunch?",
+                top_k=3,
+            )
+        )
+
+    assert response.response == "Lunch is at 12 PM."
+    assert response.primary_citation_document_id == "doc-1"
+    assert response.primary_citation_filename == "memo.txt"
+
+
+def test_hybrid_query_falls_back_when_synthesis_fails_pytest(rag_fixture, monkeypatch) -> None:
+    index_adapter = rag_fixture["index_adapter"]
+    query_service = rag_fixture["query_service"]
+    keyword_nodes = [
+        SimpleNamespace(
+            node=SimpleNamespace(
+                metadata={
+                    "document_id": "doc-1",
+                    "filename": "memo.txt",
+                    "source": "keyword",
+                },
+                text="Lunch is at 12 PM.",
+            ),
+            score=0.9,
+        )
+    ]
+
+    class _BrokenClient:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def post(self, path: str, json: dict[str, object]):
+            raise RuntimeError("ollama unavailable")
+
+    monkeypatch.setattr(httpx, "Client", lambda *args, **kwargs: _BrokenClient())
+
+    with patch.object(
+        index_adapter._qdrant_adapter,
+        "query_chunks",
+        side_effect=RuntimeError("dense backend unavailable"),
+    ), patch.object(
+        index_adapter._local_adapter,
+        "query_user_index",
+        side_effect=RuntimeError("dense backend unavailable"),
+    ), patch.object(
+        index_adapter._elasticsearch_adapter,
+        "query_chunks",
+        return_value=keyword_nodes,
+    ):
+        response = query_service.query(
+            QueryRequest(
+                user_id="user-1",
+                query="When is lunch?",
+                top_k=3,
+            )
+        )
+
+    assert response.response == "[memo.txt] Lunch is at 12 PM."
+    assert response.primary_citation_document_id == "doc-1"
+    assert response.primary_citation_filename == "memo.txt"
 
 
 def test_rebuild_user_index_calls_qdrant_and_elasticsearch_pytest(rag_fixture) -> None:

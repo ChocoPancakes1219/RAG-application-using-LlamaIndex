@@ -28,6 +28,7 @@ Flutter App
   - Qdrant upsert/search/delete
   - Elasticsearch index/search/delete
   - retrieval + citations
+  - backend 전용 internal Ollama gateway
 
 ## 강제 원칙
 
@@ -38,6 +39,7 @@ Flutter App
 - metadata 저장은 `app/domain/rag/repositories/`
 - 외부 시스템 연결은 `app/adapters/`
 - 비동기 작업 진입점은 `app/workers/`
+- internal LLM chat bridge는 retrieval과 분리된 service 경계로 유지한다
 
 ### 독립성
 
@@ -55,6 +57,7 @@ Flutter App
 - internal API는 backend 전용이다
 - user_id scope filter는 retrieval과 deletion에서 필수다
 - API key, host, storage path는 환경변수/비밀 저장소로만 관리한다
+- backend 기본 Ollama 경로는 internal gateway를 통해 전달하되, 앱에는 내부 host를 노출하지 않는다
 
 ## 리빌드 목표
 

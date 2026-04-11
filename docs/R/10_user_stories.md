@@ -23,3 +23,9 @@ So that keyword miss와 semantic miss를 함께 줄일 수 있다.
 As a backend gateway,  
 I want to 문서 인덱싱 상태를 조회하고 싶다,  
 So that 앱에 queued/processing/ready/failed 상태를 반영할 수 있다.
+
+## US-ARAG-05: 내부 LLM 게이트웨이
+
+As a backend gateway,  
+I want to 기본 Ollama 대화 요청을 internal AIRAG endpoint로 보내고 싶다,  
+So that 앱에 내부 host를 노출하지 않고 backend 기본 모델 경로를 일원화할 수 있다.

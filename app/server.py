@@ -9,13 +9,14 @@ from app.domain.rag.bootstrap import build_rag_components
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT_DIR / ".env")
-CONFIG, DOCUMENT_SERVICE, QUERY_SERVICE = build_rag_components(ROOT_DIR)
+CONFIG, DOCUMENT_SERVICE, QUERY_SERVICE, CHAT_SERVICE = build_rag_components(ROOT_DIR)
 
 app = FastAPI(title="MiniSaaS AIRAG Internal Engine")
 app.include_router(
     create_internal_rag_router(
         document_service=DOCUMENT_SERVICE,
         query_service=QUERY_SERVICE,
+        chat_service=CHAT_SERVICE,
         default_user_id=CONFIG.default_user_id,
         config=CONFIG,
     )

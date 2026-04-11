@@ -5,6 +5,7 @@
 | ID | 태스크 | 담당 | 메모 |
 |----|--------|------|------|
 | ARAG-01 | AIRAG RDIV 구조 정리 | AI/개발자 | backend gateway / airag engine 책임 분리 |
+| ARAG-08 | internal LLM gateway 추가 | AI/개발자 | backend 기본 Ollama 트래픽을 AIRAG internal endpoint로 수렴 |
 
 ## 대기 중 (Pending)
 

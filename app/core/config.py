@@ -15,6 +15,9 @@ class AppConfig:
     chunk_overlap: int = 50
     similarity_top_k: int = 3
     default_user_id: str = "demo-user"
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_chat_model: str = "qwen2.5:7b"
+    ollama_embed_model: str = "nomic-embed-text:latest"
     redis_url: str = "redis://localhost:6379/0"
     redis_password: str | None = None
     celery_task_always_eager: bool = True
@@ -35,6 +38,12 @@ class AppConfig:
             data_dir=data_dir,
             storage_dir=storage_dir,
             metadata_path=storage_dir / "documents.json",
+            ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+            ollama_chat_model=os.getenv("OLLAMA_CHAT_MODEL", "qwen2.5:7b"),
+            ollama_embed_model=os.getenv(
+                "OLLAMA_EMBED_MODEL",
+                "nomic-embed-text:latest",
+            ),
             redis_url=os.getenv("REDIS_URL", "redis://localhost:6379/0"),
             redis_password=os.getenv("REDIS_PASSWORD") or None,
             celery_task_always_eager=_env_bool("CELERY_TASK_ALWAYS_EAGER", True),

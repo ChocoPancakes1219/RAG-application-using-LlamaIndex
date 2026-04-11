@@ -11,3 +11,5 @@
 - [ ] 파일 원본 경로, 토큰, internal host를 과도하게 로그 출력하지 않음
 - [ ] Qdrant/Elasticsearch 접근 정보는 환경변수 또는 비밀 저장소로만 주입
 - [ ] 문서 삭제 시 Qdrant/Elasticsearch/original storage 동기 삭제 경로 존재
+- [ ] internal LLM gateway는 backend 전용 header 없이는 접근 불가
+- [ ] 앱 설정/응답에 기본 internal Ollama host를 직접 노출하지 않음

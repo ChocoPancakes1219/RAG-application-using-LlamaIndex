@@ -1,5 +1,21 @@
 # I/20 - 변경 이력
 
+## [0.2.17] 2026-04-09 - query 대표 citation 식별 추가
+
+> Stack Tag: `AI-RAG-STACK-2026-04-09-01`
+> 이 태그가 같은 backend/app/airag 커밋을 함께 사용해야 정상 동작한다.
+
+### Changed
+- `app/domain/rag/services/query_service.py`
+  - citation 기반 답변 합성 후, 응답 텍스트와 snippet overlap을 사용해 대표 근거를 선택하도록 변경
+- `app/domain/rag/schemas.py`
+  - `QueryResponse`에 `primary_citation_document_id`, `primary_citation_filename` 추가
+- `docs/D/30_api_contract.md`, `docs/R/20_acceptance_criteria.md`, `docs/V/20_test_cases.md`
+  - 대표 citation 식별 계약을 반영
+
+### Verification
+- `.venv/bin/python -m pytest tests/test_services_pytest.py -q`
+
 ## [0.1.0] 2026-04-06 - RDIV 문서 구조 도입
 
 ### Added
@@ -337,3 +353,38 @@
 - `bash qa/airag_qa_client/run.sh --scenario scenarios/korean_incident_guide.json` -> `passed: true`
 - `bash qa/airag_qa_client/run.sh --scenario scenarios/league_table_hard.json`
   - 5 case 중 1 case 통과로 표형 데이터 한계 확인
+
+## [0.2.27] 2026-04-08 - internal Ollama gateway 추가
+
+### Added
+- `app/domain/rag/services/chat_service.py`
+  - backend 기본 Ollama 대화 요청을 로컬 Ollama `/api/generate`로 전달하는 internal service 추가
+- `tests/test_internal_chat_pytest.py`
+  - internal chat service의 Ollama 호출 경로 검증 추가
+
+### Changed
+- `app/core/config.py`
+  - `OLLAMA_BASE_URL`, `OLLAMA_CHAT_MODEL`, `OLLAMA_EMBED_MODEL` 설정 추가
+- `app/domain/rag/bootstrap.py`
+  - chat service wiring과 Ollama 설정값 공통화
+- `app/domain/rag/schemas.py`
+  - `InternalChatRequest`, `InternalChatResponse` 추가
+- `app/api/internal_rag.py`, `app/server.py`
+  - `POST /internal/llm/chat` endpoint 추가
+
+### Notes
+- final answer orchestration 기본 책임은 여전히 backend에 둔다
+- 이 endpoint는 backend 기본 Ollama 트래픽을 숨은 internal path로 수렴시키기 위한 bridge이다
+
+## [0.2.28] 2026-04-09 - query response synthesis 추가
+
+### Changed
+- `app/domain/rag/services/query_service.py`
+  - hybrid retrieval 결과의 `citations`를 기반으로 Ollama `/api/chat` 합성 단계를 추가
+  - synthesis 실패 시 기존 retrieval fallback 문자열을 유지하도록 보강
+- `tests/test_services_pytest.py`
+  - query synthesis 성공/실패 fallback 테스트 추가
+
+### Notes
+- retrieval/citation 구조는 유지하고 `response` 품질만 개선한다
+- 답변 합성 실패 시에도 검색 결과를 잃지 않도록 fallback을 유지한다

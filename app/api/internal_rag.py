@@ -2,12 +2,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
 
-from app.domain.rag.schemas import QueryRequest
+from app.domain.rag.schemas import InternalChatRequest, QueryRequest
 
 
 def create_internal_rag_router(
     document_service,
     query_service,
+    chat_service,
     default_user_id: str,
     config,
 ) -> APIRouter:
@@ -47,6 +48,10 @@ def create_internal_rag_router(
     @router.post("/internal/rag/query")
     async def query_documents(_: InternalAuth, request: QueryRequest):
         return query_service.query(request)
+
+    @router.post("/internal/llm/chat")
+    async def chat_with_internal_llm(_: InternalAuth, request: InternalChatRequest):
+        return await chat_service.chat(request)
 
     @router.post("/ingest")
     async def legacy_ingest(

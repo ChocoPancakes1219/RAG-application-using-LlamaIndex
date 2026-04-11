@@ -27,4 +27,14 @@
 - 목적: 특정 user_id 스코프에서 hybrid retrieval 수행
 - 헤더: `X-Internal-API-Key: <AIRAG_INTERNAL_API_KEY>`
 - 요청: `user_id`, `query`, `top_k`
-- 응답: `chunks`, `citations`, `retrieval_meta`
+- 응답:
+  - `response`: citation 기반 최종 답변. synthesis 실패 시 retrieval fallback 문자열
+  - `citations`: `filename`, `document_id`, `score`, `snippet`
+  - `primary_citation_document_id`, `primary_citation_filename`: 최종 답변 생성에 가장 직접적으로 사용된 대표 근거
+
+## POST `/internal/llm/chat`
+
+- 목적: backend 기본 Ollama 대화 요청을 internal endpoint로 전달
+- 헤더: `X-Internal-API-Key: <AIRAG_INTERNAL_API_KEY>`
+- 요청: `user_id`, `message`, `model?`, `max_tokens`
+- 응답: `answer`, `provider=ollama`, `model`

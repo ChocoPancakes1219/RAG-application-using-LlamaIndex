@@ -24,3 +24,13 @@
 | `page` | 페이지 번호 또는 위치 |
 | `text` | chunk 본문 |
 | `token_count` | 토큰 수 |
+
+## internal LLM chat request/response
+
+| 필드 | 설명 |
+|------|------|
+| `user_id` | backend가 전달하는 사용자 식별자 |
+| `message` | 사용자 원문 질문 |
+| `model` | backend가 선택한 Ollama 모델명(옵션) |
+| `max_tokens` | 최대 출력 토큰 수 |
+| `answer` | Ollama 최종 응답 |

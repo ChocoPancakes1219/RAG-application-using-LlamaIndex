@@ -15,3 +15,9 @@
 
 - 업로드 요청의 응답 시간을 짧게 유지
 - 장시간 문서 파싱/임베딩 작업을 worker로 분리
+
+## ADR-004: backend 기본 Ollama 경로는 AIRAG internal gateway로 수렴한다
+
+- 앱에는 내부 Ollama host를 직접 노출하지 않는다
+- backend는 사용자 custom URL이 없을 때 AIRAG `/internal/llm/chat`을 기본 경로로 사용한다
+- custom Ollama URL이 설정된 경우에만 backend가 사용자 지정 host로 직접 연결한다
