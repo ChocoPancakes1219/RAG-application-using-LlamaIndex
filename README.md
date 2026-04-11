@@ -32,25 +32,15 @@ A local RAG (Retrieval-Augmented Generation) application using LlamaIndex with *
 ### 1. Setup
 
 ```bash
-# Clone the repo
-git clone https://github.com/YOUR_USERNAME/RAG-application-using-LlamaIndex.git
-cd RAG-application-using-LlamaIndex
-
-# Create virtual environment
-python -m venv userenv
-source userenv/bin/activate  # Linux/Mac
-# or: userenv\Scripts\activate  # Windows
-
-# Install dependencies
-pip install -r Requirements.txt
+# backend와 동일한 conda env 사용
+conda run -n backend python -m pip install -r Requirements.txt
 ```
 
 ### 2. Run (Simple)
 
 ```bash
 # Start server manually
-source userenv/bin/activate
-uvicorn main:app --host 127.0.0.1 --port 58777
+conda run -n backend uvicorn main:app --host 127.0.0.1 --port 58777
 ```
 
 Open http://127.0.0.1:58777 in your browser.
@@ -77,7 +67,7 @@ rag-server start
 rag-server status
 ```
 
-**Note**: Edit `rag-server.service` to match your paths before installing.
+**Note**: 현재 저장소 표준 실행 환경은 별도 `userenv`가 아니라 `conda run -n backend ...` 이다.
 
 ## Usage
 
@@ -139,7 +129,7 @@ Settings.embed_model = OllamaEmbedding(model_name="your-embed-model")
 ├── rag-server-cli.sh        # CLI wrapper script
 ├── data/                    # Uploaded documents (gitignored)
 ├── storage/                 # Vector index (gitignored)
-└── userenv/                 # Virtual environment (gitignored)
+└── docs/                    # RDIV documents
 ```
 
 ## Security
@@ -170,7 +160,7 @@ Settings.embed_model = OllamaEmbedding(model_name="your-embed-model")
 **Service won't start**
 - Check logs: `rag-server logs`
 - Verify paths in `rag-server.service` match your system
-- Ensure virtual environment exists: `userenv/bin/activate`
+- Ensure `conda run -n backend python --version` works
 
 ## Development
 
@@ -179,6 +169,32 @@ This project uses:
 - **LlamaIndex** for RAG implementation
 - **Ollama** for local LLM/embeddings
 - **uvicorn** as ASGI server
+
+## Runtime Convention
+
+- backend와 동일하게 `conda`의 `backend` env를 기본 실행 환경으로 사용한다
+- 예시:
+
+```bash
+conda run -n backend python -m pip install -r Requirements.txt
+conda run -n backend uvicorn main:app --host 127.0.0.1 --port 58777
+conda run -n backend python -m unittest discover -s tests -v
+```
+
+## QA Client
+
+- live QA용 독립 폴더:
+  - [`qa/airag_qa_client`](/Users/mikemin/Development/MyProjects/SaaS/min-minisaas-airag/qa/airag_qa_client)
+- QA 전용 환경파일:
+  - `qa/airag_qa_client/.env.qa`
+  - 템플릿: `qa/airag_qa_client/.env.qa.example`
+- 실행 예시:
+
+```bash
+cp qa/airag_qa_client/.env.qa.example qa/airag_qa_client/.env.qa
+cd qa/airag_qa_client
+bash run.sh
+```
 
 ## Original Project
 

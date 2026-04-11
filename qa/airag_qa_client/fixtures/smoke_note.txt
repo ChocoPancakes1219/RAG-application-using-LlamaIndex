@@ -1,0 +1,4 @@
+AIRAG smoke fixture document.
+This note explains backend orchestration for the internal RAG engine.
+Dense retrieval uses Qdrant and lexical retrieval uses Elasticsearch.
+The QA client should be able to upload this file, wait for ready status, query it, and verify citations.

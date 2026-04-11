@@ -1,0 +1,107 @@
+{
+  "name": "league_table_hard",
+  "fixture": "league_table_2003.txt",
+  "cases": [
+    {
+      "name": "rank_1_team",
+      "query": "2003 season ranking 1 team is who?",
+      "top_k": 3,
+      "expected_keywords": [
+        "cruzeiro/mg",
+        "100",
+        "2003"
+      ],
+      "expected_answer_contains": [
+        "cruzeiro/mg",
+        "100"
+      ],
+      "expected_answer_not_contains": [
+        "santos/sp;87"
+      ],
+      "expected_filenames": [
+        "league_table_2003.txt"
+      ],
+      "min_citations": 1
+    },
+    {
+      "name": "top_3_teams",
+      "query": "List the top 3 teams in 2003 ranking order.",
+      "top_k": 3,
+      "expected_keywords": [
+        "cruzeiro/mg",
+        "santos/sp",
+        "sao paulo/sp"
+      ],
+      "expected_answer_contains": [
+        "cruzeiro/mg",
+        "santos/sp",
+        "sao paulo/sp"
+      ],
+      "expected_filenames": [
+        "league_table_2003.txt"
+      ],
+      "min_citations": 1
+    },
+    {
+      "name": "corinthians_rank_and_points",
+      "query": "What were Corinthians/SP ranking and points in 2003?",
+      "top_k": 3,
+      "expected_keywords": [
+        "corinthians/sp",
+        "59",
+        "15"
+      ],
+      "expected_answer_contains": [
+        "corinthians/sp",
+        "59"
+      ],
+      "expected_answer_not_contains": [
+        "cruzeiro/mg;100"
+      ],
+      "expected_filenames": [
+        "league_table_2003.txt"
+      ],
+      "min_citations": 1
+    },
+    {
+      "name": "goal_against_47",
+      "query": "Which team had goals against 47 in 2003?",
+      "top_k": 3,
+      "expected_keywords": [
+        "cruzeiro/mg",
+        "47"
+      ],
+      "expected_answer_contains": [
+        "cruzeiro/mg",
+        "47"
+      ],
+      "expected_answer_not_contains": [
+        "santos/sp"
+      ],
+      "expected_filenames": [
+        "league_table_2003.txt"
+      ],
+      "min_citations": 1
+    },
+    {
+      "name": "goal_balance_minus_33",
+      "query": "Which team had goal balance -33 in 2003?",
+      "top_k": 3,
+      "expected_keywords": [
+        "bahia/ba",
+        "-33"
+      ],
+      "expected_answer_contains": [
+        "bahia/ba",
+        "-33"
+      ],
+      "expected_answer_not_contains": [
+        "vitoria/ba"
+      ],
+      "expected_filenames": [
+        "league_table_2003.txt"
+      ],
+      "min_citations": 1
+    }
+  ]
+}

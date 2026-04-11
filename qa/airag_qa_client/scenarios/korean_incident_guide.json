@@ -1,0 +1,22 @@
+{
+  "name": "korean_incident_guide",
+  "fixture": "korean_incident_guide.txt",
+  "query": "데이터가 사라질 거 같으면 어떻게 해야 해?",
+  "top_k": 3,
+  "expected_keywords": [
+    "데이터 손실 가능성",
+    "운영 책임자",
+    "보안 담당자",
+    "에스컬레이션"
+  ],
+  "expected_answer_contains": [
+    "데이터 손실 가능성",
+    "운영 책임자",
+    "보안 담당자",
+    "에스컬레이션"
+  ],
+  "expected_filenames": [
+    "korean_incident_guide.txt"
+  ],
+  "min_citations": 1
+}

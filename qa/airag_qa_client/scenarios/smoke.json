@@ -1,0 +1,20 @@
+{
+  "name": "smoke",
+  "fixture": "smoke_note.txt",
+  "query": "backend orchestration은 무엇을 의미하나요?",
+  "top_k": 3,
+  "expected_keywords": [
+    "backend orchestration",
+    "qdrant",
+    "elasticsearch"
+  ],
+  "expected_answer_contains": [
+    "backend orchestration",
+    "qdrant",
+    "elasticsearch"
+  ],
+  "expected_filenames": [
+    "smoke_note.txt"
+  ],
+  "min_citations": 1
+}

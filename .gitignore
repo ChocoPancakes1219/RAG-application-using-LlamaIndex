@@ -17,9 +17,15 @@ build/
 .env
 *.env
 *.env.bak
+.env.*
 openai_key.env*
 .secret*
 *_key.env*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
 
 # IDE
 .idea/
@@ -38,6 +44,14 @@ Thumbs.db
 
 # Logs
 *.log
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+celerybeat-schedule
+qa/airag_qa_client/reports/*.json
+qa/airag_qa_client/.env.qa
 
 # Backup files
 *.bak
