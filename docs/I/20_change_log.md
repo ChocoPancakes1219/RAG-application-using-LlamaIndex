@@ -1,5 +1,15 @@
 # I/20 - 변경 이력
 
+## [0.2.18] 2026-04-11 - 환경설정 기본값 관리 원칙 문서화
+
+### Changed
+- `docs/D/90_decisions.md`
+  - runtime 설정은 코드 기본값보다 env와 템플릿으로 관리한다는 원칙 추가
+  - `.env.example`에는 placeholder만 두고 실제값처럼 보이는 설정은 넣지 않는 규칙 명시
+
+### Notes
+- 편의보다 배포 안전성을 우선하며, Git tracked 파일에 운영 실값처럼 보이는 설정을 넣지 않는 것을 기본 원칙으로 유지한다
+
 ## [0.2.17] 2026-04-09 - query 대표 citation 식별 추가
 
 > Stack Tag: `AI-RAG-STACK-2026-04-09-01`
